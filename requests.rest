@@ -1,0 +1,18 @@
+POST http://localhost:5000/api/users
+Content-Type: application/json
+
+{
+    "name": "Fred",
+    "surname": "Fred",
+    "email": "fred@gmail.com",
+    "password": "fred",
+    "role": "Admin",
+    "country": "Türkiye",
+    "city": "Izmir",
+    "adress": "adress",
+    "birthdate": "23.04.2004"
+}
+
+###
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
