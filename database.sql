@@ -1,16 +1,18 @@
 CREATE DATABASE safeRide;
 
 CREATE TABLE users (
-    name varchar(100) NOT NULL,
-    surname varchar(100) NOT NULL,
-    email varchar(100) NOT NULL UNIQUE,
-    phone varchar(100) NOT NULL UNIQUE,
-    password varchar(100) NOT NULL,
-    role varchar(100) NOT NULL,
-    country varchar(100) NOT NULL,
-    city varchar(100) NOT NULL,
-    address varchar(100) NOT NULL,
-    birthdate varchar(100) NOT NULL
+    user_id uuid PRIMARY KEY DEFAULT
+    uuid_generate_v4(),
+    user_name varchar(100) NOT NULL,
+    user_surname varchar(100) NOT NULL,
+    user_email varchar(100) NOT NULL UNIQUE,
+    user_phone varchar(100) NOT NULL UNIQUE,
+    user_password varchar(100) NOT NULL,
+    user_role varchar(100) NOT NULL,
+    user_country varchar(100) NOT NULL,
+    user_city varchar(100) NOT NULL,
+    user_address varchar(100) NOT NULL,
+    user_birthdate varchar(100) NOT NULL
 );
 
 CREATE TABLE children (

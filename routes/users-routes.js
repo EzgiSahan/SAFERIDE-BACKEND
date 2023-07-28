@@ -17,10 +17,12 @@ router.get('/', authenticateToken, async(req, res) => {
 router.post('/', async(req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        // console.log(req.body);
         const newUser = await pool.query(
-            'INSERT INTO users(user_name, user_surname, user_email, user_password, user_role, user_country, user_city, user_address, user_birthdate) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RESTURNING *',
-        [req.body.name, req.body.surname, req.body.email, hashedPassword, req.body.role, req.body.country, req.body.city, req.body.address, req.body.birthdate]);
-        res.json({users: newUser[0]})
+            'INSERT INTO users (user_name, user_surname, user_email,user_phone, user_password, user_role, user_country, user_city, user_address, user_birthdate) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
+        [req.body.name, req.body.surname, req.body.email, req.body.phone, hashedPassword, req.body.role, req.body.country, req.body.city, req.body.address, req.body.birthdate]);
+        const getCretedUser = await pool.query('SELECT * FROM users WHERE user_email =$1', [req.body.email]);
+        res.json({user: getCretedUser.rows[0]})
     } catch (error) {
         res.status(500).json({error: error.message});
     }

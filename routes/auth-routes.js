@@ -13,7 +13,6 @@ router.post('/login', async(req, res) => {
         if(users.rows.length === 0) return res.status(401).json({error: 'Email is incorrect'});
         const validPassword = await bcrypt.compare(password, users.rows[0].user_password);
         if(!validPassword) return res.status(401).json({error: 'Incorrect password'});
-
         let tokens = jwtTokens(users.rows[0]);
         res.cookie('refresh_token', tokens.refreshToken, {httpOnly: true});
         res.json(tokens);
@@ -25,7 +24,7 @@ router.post('/login', async(req, res) => {
 router.get('/refresh_token', (req,res) => {
     try {
         const refreshToken = req.cookies.refresh_token;
-        if(refresh_token == null) return res.status(401).json({error: 'Null refresh token'});
+        if(refreshToken == null) return res.status(401).json({error: 'Null refresh token'});
         jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (error, user) => {
             if(error) return res.status(403).json({error: error.message});
             let tokens = jwtTokens(user);
