@@ -1,18 +1,26 @@
-POST http://localhost:5000/api/users
+POST http://localhost:8000/api/users/
 Content-Type: application/json
 
 {
-    "name": "Fred",
-    "surname": "Fred",
-    "email": "fred@gmail.com",
-    "password": "fred",
-    "role": "Admin",
-    "country": "Türkiye",
+    "name": "name",
+    "surname": "surname",
+    "email": "name@gmail.com",
+    "phone": "456",
+    "password": "pssw",
+    "role": "admin",
+    "country": "Turkiye",
     "city": "Izmir",
-    "adress": "adress",
-    "birthdate": "23.04.2004"
+    "address": "Izmir",
+    "birthdate": "2023/05/05"
 }
 
 ###
-POST http://localhost:5000/api/auth/login
-Content-Type: application/json
+GET http://localhost:8000/api/users
+
+###
+POST http://localhost:8000/api/auth/login
+
+{
+    "email": "ezgi@gmail.com",
+    "password": "sdfddf"
+}

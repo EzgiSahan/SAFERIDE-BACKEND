@@ -6,7 +6,7 @@ let localPoolConfig = {
     password: 'postgres',
     host: 'localhost',
     port: '5432',
-    database: 'safeRide'
+    database: 'ezgi'
 };
 
 const poolConfig = process.env.DATABASE_URL ? {

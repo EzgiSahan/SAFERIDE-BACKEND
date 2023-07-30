@@ -16,27 +16,36 @@ CREATE TABLE users (
 );
 
 CREATE TABLE children (
-    id int PRIMARY KEY NOT NULL UNIQUE,
-    name varchar(100) NOT NULL,
-    surname varchar(100) NOT NULL,
-    email varchar(100) NOT NULL UNIQUE,
-    phone varchar(100) NOT NULL UNIQUE
+    children_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    children_name varchar(100) NOT NULL,
+    children_surname varchar(100) NOT NULL,
+    children_email varchar(100) NOT NULL UNIQUE,
+    children_phone varchar(100) NOT NULL UNIQUE
 );
 
 CREATE TABLE company (
-    id int PRIMARY KEY NOT NULL UNIQUE,
-    name varchar(100) NOT NULL,
+    company_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    company_name varchar(100) NOT NULL,
     date_joined DATE NOT NULL,
-    email varchar(100) NOT NULL UNIQUE,
-    phone varchar(100) NOT NULL,
-    password varchar(100) NOT NULL,
-    role varchar(100) NOT NULL,
-    country varchar(100) NOT NULL,
-    city varchar(100) NOT NULL,
-    address varchar NOT NULL
+    company_email varchar(100) NOT NULL UNIQUE,
+    company_phone varchar(100) NOT NULL,
+    company_password varchar(100) NOT NULL,
+    company_role varchar(100) NOT NULL,
+    company_country varchar(100) NOT NULL,
+    company_city varchar(100) NOT NULL,
+    company_address varchar(100) NOT NULL
+);
+
+CREATE TABLE busDriver (
+    bus_driver_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name varchar(100) NOT NULL,
+    surname varchar(100) NOT NULL,
+    email varchar(100) NOT NULL,
+    phone varchar(100) NOT NULL
 );
 
 CREATE TABLE companyAdmin (
+    company_admin_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     name varchar(100) NOT NULL,
     surname varchar(100) NOT NULL,
     email varchar(100) NOT NULL UNIQUE,
@@ -47,32 +56,37 @@ CREATE TABLE companyAdmin (
     city varchar(100) NOT NULL,
     address varchar(100) NOT NULL,
     birthdate date NOT NULL,
-    company_id int PRIMARY KEY NOT NULL UNIQUE
-);
-
-CREATE TABLE trips (
-    id int NOT NULL UNIQUE,
-    date_started DATE NOT NULL,
-    bus_id int NOT NULL UNIQUE,
-    bus_driver_id int NOT NULL UNIQUE,
-    passenger int[],
-    PRIMARY KEY (id, bus_id, bus_driver_id)
+    company_id uuid,
+    CONSTRAINT fk_company_id
+        FOREIGN KEY(company_id)
+        REFERENCES company(company_id)
 );
 
 CREATE TABLE bus (
-    id int NOT NULL UNIQUE,
-    model varchar(100) NOT NULL,
-    company_id integer NOT NULL UNIQUE,
-    bus_driver_id varchar(100) NOT NULL UNIQUE,
-    PRIMARY KEY (id, company_id, bus_driver_id)
+    bus_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    bus_model varchar(100) NOT NULL,
+    company_id uuid,
+    bus_driver_id uuid,
+    CONSTRAINT fk_bus_driver_id
+        FOREIGN KEY(bus_driver_id)
+        REFERENCES busDriver(bus_driver_id),
+    CONSTRAINT fk_company_id
+        FOREIGN KEY(company_id)
+        REFERENCES company(company_id)
 );
 
-CREATE TABLE busDriver (
-    id int PRIMARY KEY,
-    name varchar(100) NOT NULL,
-    surname varchar(100) NOT NULL,
-    email varchar(100) NOT NULL,
-    phone varchar(100) NOT NULL
+CREATE TABLE trips (
+    trip_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    date_started DATE NOT NULL,
+    bus_id uuid,
+    bus_driver_id uuid,
+    passenger int[],
+    CONSTRAINT fk_bus_id
+        FOREIGN KEY(bus_id)
+        REFERENCES bus(bus_id),
+    CONSTRAINT fk_bus_driver_id
+        FOREIGN KEY(bus_driver_id)
+        REFERENCES busDriver(bus_driver_id)
 );
 
 --psql -U postgres

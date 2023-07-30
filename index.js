@@ -21,7 +21,7 @@ app.use(json());
 app.use(cookieParser());
 
 app.use('/',express.static(join(__dirname,'public')));
-app.use('/auth/',authRouter);
+app.use('/api/auth',authRouter);
 app.use('/api/users',userRouter)
 
 app.listen(PORT,()=>console.log(`Server is listening http://localhost:${PORT}`));
