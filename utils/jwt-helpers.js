@@ -5,8 +5,8 @@ const REFRESH_TOKEN_SECRET = "kakljfdkjasklfdnmasci23ui4u198274389jqfwdh871rnjfq
 
 function jwtTokens({user_id, user_name, user_email}) {
     const user = {user_id, user_name, user_email};
-    const accessToken = jwt.sign(user, ACCESS_TOKEN_SECRET, {expiresIn: '20s'});
-    const refreshToken = jwt.sign(user, REFRESH_TOKEN_SECRET, {expiresIn: '20s'});
+    const accessToken = jwt.sign(user, ACCESS_TOKEN_SECRET, {expiresIn: '1h'});
+    const refreshToken = jwt.sign(user, REFRESH_TOKEN_SECRET, {expiresIn: '2h'});
     return ({accessToken, refreshToken});
 }
 
