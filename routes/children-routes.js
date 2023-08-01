@@ -4,7 +4,7 @@ import { authenticateToken } from '../middleware/authorization.js';
 
 const router = express.Router();
 
-router.get('/',authenticateToken, async(req, res) => {
+router.get('/', authenticateToken, async(req, res) => {
     try {
         const users = await pool.query('SELECT * FROM children');
         res.json({users: users.rows});
@@ -13,7 +13,7 @@ router.get('/',authenticateToken, async(req, res) => {
     }
 })
 
-router.post('/', async(req, res) => {
+router.post('/', authenticateToken, async(req, res) => {
     try {
         const newUser = await pool.query(
             'INSERT INTO children (children_name, children_surname, children_email, children_phone) VALUES ($1, $2, $3, $4) RETURNING *',

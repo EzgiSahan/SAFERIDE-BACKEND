@@ -13,7 +13,7 @@ router.get('/',authenticateToken, async(req, res) => {
     }
 })
 
-router.post('/', async(req, res) => {
+router.post('/', authenticateToken, async(req, res) => {
     try {
         const newUser = await pool.query(
             'INSERT INTO bus (bus_model, company_id, bus_driver_id) VALUES ($1, $2, $3) RETURNING *',

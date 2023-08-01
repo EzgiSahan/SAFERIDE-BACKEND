@@ -13,7 +13,7 @@ router.get('/',authenticateToken, async(req, res) => {
     }
 })
 
-router.post('/', async(req, res) => {
+router.post('/', authenticateToken, async(req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
         const newUser = await pool.query(
