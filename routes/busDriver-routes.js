@@ -6,8 +6,8 @@ const router = express.Router();
 
 router.get('/',authenticateToken, async(req, res) => {
     try {
-        const users = await pool.query('SELECT * FROM busDriver');
-        res.json({users: users.rows});
+        const busDriver = await pool.query('SELECT * FROM busDriver');
+        res.json({busDriver: busDriver.rows});
     } catch (error) {
         res.status(500).json({error:error.message});
     }

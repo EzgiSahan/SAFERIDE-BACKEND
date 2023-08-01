@@ -6,8 +6,8 @@ const router = express.Router();
 
 router.get('/',authenticateToken, async(req, res) => {
     try {
-        const users = await pool.query('SELECT * FROM companyAdmin');
-        res.json({users: users.rows});
+        const companyAdmin = await pool.query('SELECT * FROM companyAdmin');
+        res.json({companyAdmin: companyAdmin.rows});
     } catch (error) {
         res.status(500).json({error:error.message});
     }

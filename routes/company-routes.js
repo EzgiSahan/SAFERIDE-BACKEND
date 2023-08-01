@@ -4,10 +4,10 @@ import { authenticateToken } from '../middleware/authorization.js';
 
 const router = express.Router();
 
-router.get('/',authenticateToken, async(req, res) => {
+router.get('/', async(req, res) => {
     try {
-        const users = await pool.query('SELECT * FROM company');
-        res.json({users: users.rows});
+        const company = await pool.query('SELECT * FROM company');
+        res.json({company: company.rows});
     } catch (error) {
         res.status(500).json({error:error.message});
     }
