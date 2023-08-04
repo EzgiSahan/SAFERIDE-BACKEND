@@ -12,7 +12,8 @@ CREATE TABLE users (
     user_country varchar(100) NOT NULL,
     user_city varchar(100) NOT NULL,
     user_address varchar(100) NOT NULL,
-    user_birthdate varchar(100) NOT NULL
+    user_birthdate varchar(100) NOT NULL,
+    verified Boolean DEFAULT false
 );
 
 CREATE TABLE children (

@@ -11,6 +11,7 @@ import busDriverRouter from './routes/busDriver-routes.js';
 import childrenRouter from './routes/children-routes.js';
 import companyRouter from './routes/company-routes.js';
 import tripsRouter from './routes/trips-routes.js';
+import verificationRouter from './routes/verification-routes.js'
   
 
 dotenv.config();
@@ -33,5 +34,6 @@ app.use('/api/busDriver', busDriverRouter);
 app.use('/api/children', childrenRouter);
 app.use('/api/company', companyRouter);
 app.use('/api/trips', tripsRouter);
+app.use('/api/verification', verificationRouter)
 
 app.listen(PORT,()=>console.log(`Server is listening http://localhost:${PORT}`));
