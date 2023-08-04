@@ -1,11 +1,11 @@
 import express from 'express';
 import pool from '../db.js';
-//import bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt';
 import { authenticateToken } from '../middleware/authorization.js';
 
 const router = express.Router();
 
-router.get('/', async(req, res) => {
+router.get('/',async(req, res) => {
     try {
         const users = await pool.query('SELECT * FROM users');
         res.json({users: users.rows});
@@ -27,7 +27,7 @@ router.post('/', async(req, res) => {
     }
 })
 
-router.delete('/:id', authenticateToken, async(req,res)=>{
+router.delete('/:id', async(req,res)=>{
     try{
         var id = req.params.id;
         console.log(id);
@@ -60,7 +60,7 @@ function replaceEmptyAttributes(jsonObject, replacementObject) {
     return 
   }
 
-router.put('/:id', authenticateToken, async(req,res)=>{
+router.put('/:id', async(req,res)=>{
     try{
         var id = req.params.id;
         const users = await pool.query('SELECT * FROM users where user_id = $1', [id]);
