@@ -1,6 +1,7 @@
 import express from 'express';
 import pool from '../db.js';
 import { authenticateToken } from '../middleware/authorization.js';
+import Company from '../models/Company.js';
 
 const router = express.Router();
 
@@ -15,10 +16,17 @@ router.get('/', async(req, res) => {
 
 router.post('/', async(req, res) => {
     try {
-        const newUser = await pool.query(
-            'INSERT INTO company (company_name, date_joined, company_email, company_phone, company_country, company_city, company_address) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-        [req.body.name, req.body.date, req.body.email, req.body.phone, req.body.country, req.body.city, req.body.address]);
-        res.json({users: newUser.rows[0]})
+        const newCompany = await Company.create({
+            name: req.body.name,
+            joinedDate: req.body.joinedDate,
+            email: req.body.email,
+            phone: req.body.phone,
+            country: req.body.country,
+            city: req.body.city,
+            address: req.body.address
+        });
+        console.log('Company created:', newCompany.toJSON());
+        res.status(200).json({users: newCompany.toJSON()})
     } catch (error) {
         res.status(500).json({error: error.message});
     }

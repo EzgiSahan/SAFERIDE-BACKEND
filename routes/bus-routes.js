@@ -1,6 +1,7 @@
 import express from 'express';
 import pool from '../db.js';
 import { authenticateToken } from '../middleware/authorization.js';
+import Bus from '../models/Bus.js';
 
 const router = express.Router();
 
@@ -15,10 +16,13 @@ router.get('/', async(req, res) => {
 
 router.post('/', async(req, res) => {
     try {
-        const newUser = await pool.query(
-            'INSERT INTO bus (bus_model, company_id, bus_driver_id) VALUES ($1, $2, $3) RETURNING *',
-        [req.body.model, req.body.companyId, req.body.driverId]);
-        res.json({users: newUser.rows[0]})
+        const newBus = await Bus.create({
+            model: req.body.model,
+            companyId: req.body.companyId,
+            busDriverId: req.body.busDriverId 
+        });
+        console.log('Bus created:', newBus.toJSON());
+        res.status(200).json({users: newBus.toJSON()})
     } catch (error) {
         res.status(500).json({error: error.message});
     }

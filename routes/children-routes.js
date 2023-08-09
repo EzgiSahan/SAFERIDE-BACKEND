@@ -1,6 +1,7 @@
 import express from 'express';
 import pool from '../db.js';
 import { authenticateToken } from '../middleware/authorization.js';
+import Children from '../models/Children.js';
 
 const router = express.Router();
 
@@ -15,10 +16,15 @@ router.get('/',async(req, res) => {
 
 router.post('/',async(req, res) => {
     try {
-        const newUser = await pool.query(
-            'INSERT INTO children (children_name, children_surname, children_email, children_phone, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-        [req.body.name, req.body.surname, req.body.email, req.body.phone, req.body.parentId]);
-        res.json({users: newUser.rows[0]})
+        const newChildren = await Children.create({
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            email: req.body.email,
+            phone: req.body.phone,
+            userId: req.body.userId, 
+        });
+        console.log('Children created:', newChildren.toJSON());
+        res.status(200).json({users: newChildren.toJSON()})
     } catch (error) {
         res.status(500).json({error: error.message});
     }
