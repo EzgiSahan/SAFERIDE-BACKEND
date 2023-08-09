@@ -12,6 +12,7 @@ import childrenRouter from './routes/children-routes.js';
 import companyRouter from './routes/company-routes.js';
 import tripsRouter from './routes/trips-routes.js';
 import verificationRouter from './routes/verification-routes.js'
+import sequelize from './db.js';
   
 
 dotenv.config();
@@ -25,6 +26,17 @@ const corsOptions = {credentails: true ,origin: process.env.URL || '*'};
 app.use(cors(corsOptions));
 app.use(json());
 app.use(cookieParser());
+
+async function syncDatabase() {
+    try {
+      await sequelize.sync({ force: true }); // Passing { force: true } will drop existing tables
+      console.log('Database synchronized.');
+    } catch (error) {
+      console.error('Error synchronizing database:', error);
+    }
+}
+  
+syncDatabase();
 
 app.use('/',express.static(join(__dirname,'public')));
 app.use('/api/auth',authRouter);
