@@ -21,7 +21,7 @@ export async function sendVerificationEmail(email, subject, text) {
         });
 
         await transporter.sendMail({
-            from: process.env.USER,
+            from: "ammarkaid321@gmail.com",
             to: email,
             subject: subject,
             text: text

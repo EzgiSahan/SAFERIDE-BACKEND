@@ -4,6 +4,7 @@ import pool from '../db.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
+const EMAIL_VERIFICATION_SECRET="eidfödlffşjrfp4jfj49dflkf";
 const router = express.Router();
 
 router.post('/signup', async (req, res) => {
@@ -17,7 +18,7 @@ router.post('/signup', async (req, res) => {
             'INSERT INTO users (user_name, user_surname, user_email, user_phone, user_password, user_role, user_country, user_city, user_address, user_birthdate, verified) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *',
             [req.body.name, req.body.surname, req.body.email, req.body.phone, hashedPassword, req.body.role, req.body.country, req.body.city, req.body.address, req.body.birthdate, false]
         );
-        const verificationToken = jwt.sign({ userId: result.rows[0].user_id }, process.env.EMAIL_VERIFICATION_SECRET, {
+        const verificationToken = jwt.sign({ userId: result.rows[0].user_id }, EMAIL_VERIFICATION_SECRET, {
             expiresIn: '1d',
         });
         const verificationLink = `${process.env.BASE_URL}/verify/${verificationToken}`;
@@ -33,7 +34,7 @@ router.post('/signup', async (req, res) => {
 router.get('/verify/:token', async (req, res) => {
     try {
         const { token } = req.params;
-        jwt.verify(token, process.env.EMAIL_VERIFICATION_SECRET, async (error, decodedToken) => {
+        jwt.verify(token, EMAIL_VERIFICATION_SECRET, async (error, decodedToken) => {
             if (error) {
                 return res.status(400).json({ error: 'Invalid or expired token' });
             }

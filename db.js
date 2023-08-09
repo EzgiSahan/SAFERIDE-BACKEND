@@ -3,10 +3,10 @@ const {Pool} = pg;
 
 let localPoolConfig = {
     user: 'postgres',
-    password: 'postgres',
+    password: 'kkmobil',
     host: 'localhost',
     port: '5432',
-    database: 'ezgi'
+    database: 'safeRide'
 };
 
 const poolConfig = process.env.DATABASE_URL ? {

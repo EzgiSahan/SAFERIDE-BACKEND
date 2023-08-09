@@ -2,10 +2,11 @@ import express from 'express';
 import pool from '../db.js';
 import bcrypt from 'bcrypt';
 import { authenticateToken } from '../middleware/authorization.js';
+import jwt from 'jsonwebtoken';
 
 const router = express.Router();
 
-router.get('/',async(req, res) => {
+router.get('/',authenticateToken,async(req, res) => {
     try {
         const users = await pool.query('SELECT * FROM users');
         res.json({users: users.rows});
@@ -13,6 +14,17 @@ router.get('/',async(req, res) => {
         res.status(500).json({error:error.message});
     }
 })
+router.get('/me',async(req, res) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    if(token == null) return res.status(401).json({error: 'Null token'});
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, user) =>{
+        if(error) return res.status(403).json({error: error.message});
+        req.user = user;
+        console.log(user);
+        res.status(200).json({user: user})
+    })
+});
 
 router.post('/', async(req, res) => {
     try {
