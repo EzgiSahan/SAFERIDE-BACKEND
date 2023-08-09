@@ -18,9 +18,9 @@ dotenv.config();
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const app = express();
+const app = express(); 
 const PORT = process.env.PORT || 8000;
-const corsOptions = {credentails: true, origin: process.env.URL || '*'};
+const corsOptions = {credentails: true ,origin: process.env.URL || '*'};
 
 app.use(cors(corsOptions));
 app.use(json());
