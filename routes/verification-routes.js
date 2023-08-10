@@ -4,7 +4,6 @@ import pool from '../db.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-const EMAIL_VERIFICATION_SECRET="eidfödlffşjrfp4jfj49dflkf";
 const router = express.Router();
 
 router.post('/signup', async (req, res) => {
@@ -27,7 +26,7 @@ router.post('/signup', async (req, res) => {
             birthdate: req.body.birthdate,
             verified: false
         });
-        const verificationToken = jwt.sign({ userId: newUser.id }, EMAIL_VERIFICATION_SECRET, {
+        const verificationToken = jwt.sign({ userId: newUser.id }, process.env.EMAIL_VERIFICATION_SECRET, {
             expiresIn: '1d',
         });
         const verificationLink = `${process.env.BASE_URL}/verify/${verificationToken}`;
@@ -42,7 +41,7 @@ router.post('/signup', async (req, res) => {
 router.get('/verify/:token', async (req, res) => {
     try {
         const { token } = req.params;
-        jwt.verify(token, EMAIL_VERIFICATION_SECRET, async (error, decodedToken) => {
+        jwt.verify(token, process.env.EMAIL_VERIFICATION_SECRET, async (error, decodedToken) => {
             if (error) {
                 return res.status(400).json({ error: 'Invalid or expired token' });
             }

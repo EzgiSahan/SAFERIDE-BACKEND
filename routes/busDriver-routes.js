@@ -66,34 +66,32 @@ function replaceEmptyAttributes(jsonObject, replacementObject) {
       }
     }
     return 
-  }
+}
 
-router.put('/:id', authenticateToken, async(req,res)=>{
-    try{
-        var id = req.params.id;
-        const busDriver = await pool.query('SELECT * FROM busDriver where bus_driver_id = $1', [id]);
-        const querriedBusDriver = busDriver.rows[0];
-        console.log(querriedBusDriver);
-        delete querriedBusDriver.bus_driver_id;
-        delete querriedBusDriver.surname;
-        if (querriedBusDriver === undefined){
-            res.status(400).json({message: 'Bus Driver not found'});
-        }
-        else{
-            console.log(req.body);
-            console.log(querriedBusDriver);
-            replaceEmptyAttributes(req.body,querriedBusDriver);
-            const {name,surname,email,phone} = req.body;
-            const query = `UPDATE "busDriver" SET "name" = $1, "surname" = $2 , "email" = $3, "phone" = $4 WHERE "bus_driver_id" = $5`;
-            console.log(req.body);
-            const UpdatedBusDriver = await pool.query(query,[name,surname,email,phone]);
-            res.status(200).json({message: "Bus Driver Updated Successfully!"});
-        }
+router.put('/:id', async(req,res)=>{
+    try {
+      const id = req.params.id;
+      console.log(id);  
+      const querriedBusDriver = await BusDriver.findByPk(id);
+      replaceEmptyAttributes(req.body,querriedBusDriver);
+  
+      if (!querriedBusDriver) {
+        res.status(400).json({ message: 'Bus Driver not found' });
+        return;
+      }
+      console.log(querriedBusDriver.toJSON());
+      const newBusDriver = await querriedBusDriver.update({
+        firstName: req.body.firstName,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        phone: req.body.phone
+      });
+      res.status(200).json({ message: 'Bus Driver Updated Successfully!' });
     }
-    catch(error){
-        res.status(500).json({error: error.message});
+    catch (err) {
+      res.status(500).json({ error: err.message });
     }
 })
-
 
 export default router;
