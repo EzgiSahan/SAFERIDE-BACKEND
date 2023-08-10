@@ -7,10 +7,10 @@ import User from '../models/User.js';
 
 const router = express.Router();
 
-router.get('/',authenticateToken,async(req, res) => {
+router.get('/',async(req, res) => {
     try {
-        const users = await pool.query('SELECT * FROM users');
-        res.json({users: users.rows});
+      const users = await User.findAll();
+      res.json({users: users});
     } catch (error) {
         res.status(500).json({error:error.message});
     }
@@ -44,7 +44,7 @@ router.post('/', async(req, res) => {
       password: hashedPassword,
     });
 
-    console.log('User created:', newUser.toJSON());
+    await newUser.save(); 
     res.status(200).json({users: newUser.toJSON()})
   } 
   catch (error) {
@@ -53,15 +53,24 @@ router.post('/', async(req, res) => {
 })
 
 router.delete('/:id', async(req,res)=>{
-    try{
-        var id = req.params.id;
-        console.log(id);
-        const DeleteUser = await pool.query('DELETE FROM users WHERE user_id = $1', [id]);
-        res.status(200).json({message: 'User deleted'});
+  try {
+    const id = req.params.id;
+    // Find the user by user_id and delete it
+    const deletedUserCount = await User.destroy({
+      where: {
+        id: id,
+      },
+    });
+    if (deletedUserCount === 0) {
+      res.status(400).json({ message: 'User not found' });
+      return;
     }
-    catch(error){
-        res.status(500).json({error: error.message});
-    }
+
+    res.status(200).json({ message: 'User deleted' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  } 
+s
 })
 
 function replaceEmptyAttributes(jsonObject, replacementObject) {
@@ -86,31 +95,38 @@ function replaceEmptyAttributes(jsonObject, replacementObject) {
   }
 
 router.put('/:id', async(req,res)=>{
-    try{
-        var id = req.params.id;
-        const users = await pool.query('SELECT * FROM users where user_id = $1', [id]);
-        const querriedUser = users.rows[0];
-        console.log(querriedUser);
-        delete querriedUser.user_id;
-        delete querriedUser.user_password;
-        if (querriedUser === undefined){
-            res.status(400).json({message: 'User not found'});
-        }
-        else{
-            console.log(req.body);
-            console.log(querriedUser);
-            replaceEmptyAttributes(req.body,querriedUser);
-            const {user_name,user_surname,user_country,user_phone,user_email,user_birthdate,user_address,user_role,user_city} = req.body;
-            const query = `UPDATE "users" SET "user_name" = $1, "user_surname" = $2 , "user_country" = $3, "user_phone" = $4,
-                             "user_email" = $5, "user_birthdate" = $6, "user_address" = $7, "user_role" = $8, "user_city" = $9 WHERE "user_id" = $10`;
-            console.log(req.body);
-            const UpdatedUser = await pool.query(query,[user_name,user_surname,user_country,user_phone,user_email,user_birthdate,user_address,user_role,user_city,id]);
-            res.status(200).json({message: "User Updated Successfully!"});
-        }
+  try {
+    const id = req.params.id;
+    console.log(id);
+
+    // Find the user by user_id
+    const querriedUser = await User.findByPk(id);
+
+    replaceEmptyAttributes(req.body,querriedUser);
+
+
+    if (!querriedUser) {
+      res.status(400).json({ message: 'User not found' });
+      return;
     }
-    catch(error){
-        res.status(500).json({error: error.message});
-    }
+
+    console.log(querriedUser.toJSON());
+    const newUser = await querriedUser.update({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      phone: req.body.phone,
+      country: req.body.country,
+      city: req.body.city,
+      address: req.body.address,
+      birthdate: req.body.birthdate,
+      role: req.body.role,
+    });
+    res.status(200).json({ message: 'User Updated Successfully!' });
+  }
+  catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 })
 
 

@@ -29,7 +29,7 @@ app.use(cookieParser());
 
 async function syncDatabase() {
     try {
-      await sequelize.sync({ force: true }); // Passing { force: true } will drop existing tables
+      await sequelize.sync(); // Passing { force: true } will drop existing tables
       console.log('Database synchronized.');
     } catch (error) {
       console.error('Error synchronizing database:', error);
