@@ -16,12 +16,13 @@ router.get('/',async(req, res) => {
 
 router.post('/',async(req, res) => {
     try {
+        // Create a new Children record
         const newChildren = await Children.create({
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            email: req.body.email,
-            phone: req.body.phone,
-            userId: req.body.userId, 
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          email: req.body.email,
+          phone: req.body.phone,
+          userId: req.body.userId,
         });
         await newChildren.save(); 
         res.status(200).json({users: newChildren.toJSON()})
@@ -47,6 +48,23 @@ router.delete('/:id', async(req,res)=>{
         res.status(500).json({ error: error.message });
     } 
 })
+
+//Get children of User
+router.get('/user/:id', async(req,res)=>{
+    try{
+        var id = req.params.id;
+        const user_children = await Children.findAll({
+            where: {
+              userId: id,
+            },
+          });
+        res.status(200).json({children: user_children});
+    }
+    catch(error){
+        res.status(500).json({error: error.message});
+    } 
+
+});
 
 function replaceEmptyAttributes(jsonObject, replacementObject) {
     const stack = [{ jsonObject, replacementObject }];
