@@ -7,13 +7,11 @@ const router = express.Router();
 
 router.get('/',async(req, res) => {
     try {
-        // Fetch all children records
         const children = await Children.findAll();
-    
-        res.json({ children: children.map(child => child.toJSON()) });
-      } catch (error) {
-        res.status(500).json({ error: error.message });
-      }
+        res.json({children: children});
+    } catch (error) {
+          res.status(500).json({error:error.message});
+    }
 })
 
 router.post('/',async(req, res) => {
@@ -26,24 +24,29 @@ router.post('/',async(req, res) => {
           phone: req.body.phone,
           userId: req.body.userId,
         });
-
-        console.log('Children created:', newChildren.toJSON());
-        res.status(200).json({ children: newChildren.toJSON()});
-      } catch (error) {
-        res.status(500).json({ error: error.message });
-      } 
+        await newChildren.save(); 
+        res.status(200).json({users: newChildren.toJSON()})
+    } catch (error) {
+        res.status(500).json({error: error.message});
+    }
 })
 
 router.delete('/:id', async(req,res)=>{
-    try{
-        var id = req.params.id;
-        console.log(id);
-        const DeleteChildren = await pool.query('DELETE FROM children WHERE children_id = $1', [id]);
-        res.status(200).json({message: 'Children deleted'});
-    }
-    catch(error){
-        res.status(500).json({error: error.message});
-    }
+    try {
+        const id = req.params.id;
+        const deletedChildrenCount = await Children.destroy({
+          where: {
+            id: id,
+          },
+        });
+        if (deletedChildrenCount === 0) {
+          res.status(400).json({ message: 'Children not found' });
+          return;
+        }
+        res.status(200).json({ message: 'Children deleted' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    } 
 })
 
 //Get children of User
