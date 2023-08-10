@@ -7,10 +7,10 @@ const router = express.Router();
 
 router.get('/', async(req, res) => {
     try {
-        const bus = await pool.query('SELECT * FROM bus');
-        res.json({bus: bus.rows});
+        const bus = await Bus.findAll();
+        res.json({bus: bus});
     } catch (error) {
-        res.status(500).json({error:error.message});
+          res.status(500).json({error:error.message});
     }
 })
 
@@ -21,7 +21,7 @@ router.post('/', async(req, res) => {
             companyId: req.body.companyId,
             busDriverId: req.body.busDriverId 
         });
-        console.log('Bus created:', newBus.toJSON());
+        await newBus.save(); 
         res.status(200).json({users: newBus.toJSON()})
     } catch (error) {
         res.status(500).json({error: error.message});
@@ -29,15 +29,22 @@ router.post('/', async(req, res) => {
 })
 
 router.delete('/:id', async(req,res)=>{
-    try{
-        var id = req.params.id;
-        console.log(id);
-        const DeleteBus = await pool.query('DELETE FROM bus WHERE bus_id = $1', [id]);
-        res.status(200).json({message: 'Bus deleted'});
-    }
-    catch(error){
-        res.status(500).json({error: error.message});
-    }
+    try {
+        const id = req.params.id;
+        const deletedBusCount = await Bus.destroy({
+          where: {
+            id: id,
+          },
+        });
+        if (deletedBusCount === 0) {
+          res.status(400).json({ message: 'Bus not found' });
+          return;
+        }
+    
+        res.status(200).json({ message: 'Bus deleted' });
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      } 
 })
 
 function replaceEmptyAttributes(jsonObject, replacementObject) {

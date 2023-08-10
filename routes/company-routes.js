@@ -7,10 +7,10 @@ const router = express.Router();
 
 router.get('/', async(req, res) => {
     try {
-        const company = await pool.query('SELECT * FROM company');
-        res.json({company: company.rows});
+        const company = await Company.findAll();
+        res.json({company: company});
     } catch (error) {
-        res.status(500).json({error:error.message});
+          res.status(500).json({error:error.message});
     }
 })
 
@@ -25,7 +25,7 @@ router.post('/', async(req, res) => {
             city: req.body.city,
             address: req.body.address
         });
-        console.log('Company created:', newCompany.toJSON());
+        await newCompany.save(); 
         res.status(200).json({users: newCompany.toJSON()})
     } catch (error) {
         res.status(500).json({error: error.message});
@@ -33,15 +33,21 @@ router.post('/', async(req, res) => {
 })
 
 router.delete('/:id', async(req,res)=>{
-    try{
-        var id = req.params.id;
-        console.log(id);
-        const DeleteCompany = await pool.query('DELETE FROM company WHERE company_id = $1', [id]);
-        res.status(200).json({message: 'Company deleted'});
-    }
-    catch(error){
-        res.status(500).json({error: error.message});
-    }
+    try {
+        const id = req.params.id;
+        const deletedCompanyCount = await Company.destroy({
+          where: {
+            id: id,
+          },
+        });
+        if (deletedCompanyCount === 0) {
+          res.status(400).json({ message: 'Company not found' });
+          return;
+        }
+        res.status(200).json({ message: 'Company deleted' });
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      } 
 })
 
 function replaceEmptyAttributes(jsonObject, replacementObject) {

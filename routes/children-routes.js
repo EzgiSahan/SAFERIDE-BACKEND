@@ -7,10 +7,10 @@ const router = express.Router();
 
 router.get('/',async(req, res) => {
     try {
-        const children = await pool.query('SELECT * FROM children');
-        res.json({children: children.rows});
+        const children = await Children.findAll();
+        res.json({children: children});
     } catch (error) {
-        res.status(500).json({error:error.message});
+          res.status(500).json({error:error.message});
     }
 })
 
@@ -23,7 +23,7 @@ router.post('/',async(req, res) => {
             phone: req.body.phone,
             userId: req.body.userId, 
         });
-        console.log('Children created:', newChildren.toJSON());
+        await newChildren.save(); 
         res.status(200).json({users: newChildren.toJSON()})
     } catch (error) {
         res.status(500).json({error: error.message});
@@ -31,15 +31,21 @@ router.post('/',async(req, res) => {
 })
 
 router.delete('/:id', async(req,res)=>{
-    try{
-        var id = req.params.id;
-        console.log(id);
-        const DeleteChildren = await pool.query('DELETE FROM children WHERE children_id = $1', [id]);
-        res.status(200).json({message: 'Children deleted'});
-    }
-    catch(error){
-        res.status(500).json({error: error.message});
-    }
+    try {
+        const id = req.params.id;
+        const deletedChildrenCount = await Children.destroy({
+          where: {
+            id: id,
+          },
+        });
+        if (deletedChildrenCount === 0) {
+          res.status(400).json({ message: 'Children not found' });
+          return;
+        }
+        res.status(200).json({ message: 'Children deleted' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    } 
 })
 
 function replaceEmptyAttributes(jsonObject, replacementObject) {

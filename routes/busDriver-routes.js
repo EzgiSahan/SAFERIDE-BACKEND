@@ -7,10 +7,10 @@ const router = express.Router();
 
 router.get('/', async(req, res) => {
     try {
-        const busDriver = await pool.query('SELECT * FROM busDriver');
-        res.json({busDriver: busDriver.rows});
+        const busdriver = await BusDriver.findAll();
+        res.json({busdriver: busdriver});
     } catch (error) {
-        res.status(500).json({error:error.message});
+          res.status(500).json({error:error.message});
     }
 })
 
@@ -22,7 +22,7 @@ router.post('/', async(req, res) => {
             email: req.body.email,
             phone: req.body.phone
         });
-        console.log('BusDriver created:', newBusDriver.toJSON());
+        await newBusDriver.save(); 
         res.status(200).json({users: newBusDriver.toJSON()})
     } catch (error) {
         res.status(500).json({error: error.message});
@@ -30,15 +30,21 @@ router.post('/', async(req, res) => {
 })
 
 router.delete('/:id', async(req,res)=>{
-    try{
-        var id = req.params.id;
-        console.log(id);
-        const DeleteBusDriver = await pool.query('DELETE FROM busDriver WHERE bus_driver_id = $1', [id]);
-        res.status(200).json({message: 'Bus Driver deleted'});
-    }
-    catch(error){
-        res.status(500).json({error: error.message});
-    }
+    try {
+        const id = req.params.id;
+        const deletedBusDriverCount = await BusDriver.destroy({
+          where: {
+            id: id,
+          },
+        });
+        if (deletedBusDriverCount === 0) {
+          res.status(400).json({ message: 'Bus Driver not found' });
+          return;
+        }
+        res.status(200).json({ message: 'Bus Driver deleted' });
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      } 
 })
 
 function replaceEmptyAttributes(jsonObject, replacementObject) {
