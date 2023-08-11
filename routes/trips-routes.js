@@ -78,7 +78,6 @@ function replaceEmptyAttributes(jsonObject, replacementObject) {
 router.put('/:id', async(req,res)=>{
     try {
       const id = req.params.id;
-      console.log(id);  
       const querriedTrip = await Trips.findByPk(id);
       replaceEmptyAttributes(req.body,querriedTrip);
   
