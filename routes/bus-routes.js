@@ -22,7 +22,7 @@ router.post('/', async(req, res) => {
             busDriverId: req.body.busDriverId 
         });
         await newBus.save(); 
-        res.status(200).json({users: newBus.toJSON()})
+        res.status(200).json({buses: newBus.toJSON()})
     } catch (error) {
         res.status(500).json({error: error.message});
     }

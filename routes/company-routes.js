@@ -26,7 +26,7 @@ router.post('/', async(req, res) => {
             address: req.body.address
         });
         await newCompany.save(); 
-        res.status(200).json({users: newCompany.toJSON()})
+        res.status(200).json({companies: newCompany.toJSON()})
     } catch (error) {
         res.status(500).json({error: error.message});
     }

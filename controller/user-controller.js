@@ -20,7 +20,7 @@ async function createUser(req,res) {
     });
 
     console.log('User created:', newUser.toJSON());
-    res.status(200).json({users: newUser.toJSON()})
+    res.status(200).json({busDrivers: newUser.toJSON()})
     } 
     catch (error) {
         res.status(500).json({error: error.message});

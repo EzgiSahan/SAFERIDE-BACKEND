@@ -32,7 +32,7 @@ router.post('/', async(req, res) => {
         companyId: req.body.companyId
       });
       await newCompanyAdmin.save(); 
-      res.status(200).json({users: newCompanyAdmin.toJSON()})
+      res.status(200).json({companyadmins: newCompanyAdmin.toJSON()})
     } 
     catch (error) {
       res.status(500).json({error: error.message});

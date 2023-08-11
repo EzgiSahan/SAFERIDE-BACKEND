@@ -25,7 +25,7 @@ router.post('/',async(req, res) => {
           userId: req.body.userId,
         });
         await newChildren.save(); 
-        res.status(200).json({users: newChildren.toJSON()})
+        res.status(200).json({children: newChildren.toJSON()})
     } catch (error) {
         res.status(500).json({error: error.message});
     }

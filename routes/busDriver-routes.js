@@ -23,7 +23,7 @@ router.post('/', async(req, res) => {
             phone: req.body.phone
         });
         await newBusDriver.save(); 
-        res.status(200).json({users: newBusDriver.toJSON()})
+        res.status(200).json({busDrivers: newBusDriver.toJSON()})
     } catch (error) {
         res.status(500).json({error: error.message});
     }

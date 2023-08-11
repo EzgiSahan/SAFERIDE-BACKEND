@@ -1,39 +1,57 @@
 import express from 'express';
-import pool from '../db.js';
 import { authenticateToken } from '../middleware/authorization.js';
+import Trips from '../models/Trips.js';
 
 const router = express.Router();
 
-router.get('/' ,async(req, res) => {
+router.get('/', async(req, res) => {
     try {
-        const trips = await pool.query('SELECT * FROM trips');
-        res.json({trips: trips.rows});
+        const trips = await Trips.findAll();
+        res.json({trips: trips});
     } catch (error) {
-        res.status(500).json({error:error.message});
+          res.status(500).json({error:error.message});
     }
 })
 
-router.post('/',async(req, res) => {
+router.post('/', async(req, res) => {
     try {
-        const newUser = await pool.query(
-            'INSERT INTO trips (date_started, bus_id, passenger) VALUES ($1, $2, $3) RETURNING *',
-        [req.body.date, req.body.busId ,req.body.passenger]);
-        res.json({users: newUser.rows[0]})
+        const seatNO = 30;
+        let seats = {};
+        for (let i = 1; i <= seatNO; i++) {
+          seats[i] = "";
+        }
+        const string_seats = JSON.stringify(seats);
+        const newTrip = await Trips.create({
+            code: req.body.code,
+            departureDate: req.body.departureDate,
+            arrivalDate: req.body.arrivalDate,
+            destination: req.body.destination,
+            seats: string_seats,            
+        });
+        await newTrip.save(); 
+        res.status(200).json({trips: newTrip.toJSON()})
     } catch (error) {
         res.status(500).json({error: error.message});
     }
 })
 
 router.delete('/:id', async(req,res)=>{
-    try{
-        var id = req.params.id;
-        console.log(id);
-        const DeleteTrip = await pool.query('DELETE FROM trips WHERE trip_id = $1', [id]);
-        res.status(200).json({message: 'Trip deleted'});
-    }
-    catch(error){
-        res.status(500).json({error: error.message});
-    }
+    try {
+        const id = req.params.id;
+        const deletedTrip = await Trips.destroy({
+          where: {
+            id: id,
+          },
+        });
+        if (deletedTrip === 0) {
+          res.status(400).json({ message: 'Trip not found' });
+          return;
+        }
+    
+        res.status(200).json({ message: 'Trip deleted' });
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      } 
 })
 
 function replaceEmptyAttributes(jsonObject, replacementObject) {
@@ -55,33 +73,30 @@ function replaceEmptyAttributes(jsonObject, replacementObject) {
       }
     }
     return 
-  }
+}
 
 router.put('/:id', async(req,res)=>{
-    try{
-        var id = req.params.id;
-        const trips = await pool.query('SELECT * FROM trips where trip_id = $1', [id]);
-        const querriedTrip = trips.rows[0];
-        console.log(querriedTrip);
-        delete querriedTrip.trip_id;
-        if (querriedTrip === undefined){
-            res.status(400).json({message: 'Trip not found'});
-        }
-        else{
-            console.log(req.body);
-            console.log(querriedTrip);
-            replaceEmptyAttributes(req.body,querriedTrip);
-            const {date_started,bus_id,passenger} = req.body;
-            const query = `UPDATE "trips" SET "date_started" = $1, "bus_id" = $2 , "passenger" = $3 WHERE "trip_id" = $4`;
-            console.log(req.body);
-            const UpdateTrip = await pool.query(query,[date_started,bus_id,passenger,id]);
-            res.status(200).json({message: "Trip Updated Successfully!"});
-        }
+    try {
+      const id = req.params.id;
+      console.log(id);  
+      const querriedTrip = await Trips.findByPk(id);
+      replaceEmptyAttributes(req.body,querriedTrip);
+  
+      if (!querriedBus) {
+        res.status(400).json({ message: 'Bus not found' });
+        return;
+      }
+      console.log(querriedTrip.toJSON());
+      const newTrip = await querriedTrip.update({
+        model: req.body.model,
+        companyId: req.body.companyId,
+        busDriverId: req.body.busDriverId 
+      });
+      res.status(200).json({ message: 'Trip Updated Successfully!' });
     }
-    catch(error){
-        res.status(500).json({error: error.message});
+    catch (err) {
+      res.status(500).json({ error: err.message });
     }
 })
-
 
 export default router;
