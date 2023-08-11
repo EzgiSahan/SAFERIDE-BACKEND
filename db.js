@@ -1,24 +1,11 @@
-import pg from 'pg';
-// const {Pool} = pg;
+import dotenv from 'dotenv';
+
 import {Sequelize} from 'sequelize';
+dotenv.config();
 
-
-// let localPoolConfig = {
-//     user: 'postgres',
-//     password: 'kkmobil',
-//     host: 'localhost',
-//     port: '5432',
-//     database: 'safeRide'
-// };
-
-const sequelize = new Sequelize('Internship', 'postgres', 'kkmobil', {
+const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_USER_PASSWORD,{
     host: 'localhost',
     dialect: 'postgres'
 });
-// const poolConfig = process.env.DATABASE_URL ? {
-//     connectionString:process.env.DATABASE_URL,
-//     ssl:{rejectUnauthorized: false }
-// } : localPoolConfig;
 
-// const pool = new Pool(poolConfig);
 export default sequelize;

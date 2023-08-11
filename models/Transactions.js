@@ -3,6 +3,7 @@ import sequelize from '../db.js';
 import { v4 as uuidv4 } from 'uuid';
 import Trips from './Trips.js';
 import User from './User.js';
+import Children from './Children.js';
 
 const Transactions = sequelize.define('transactions', {
     id: {
@@ -26,8 +27,9 @@ const Transactions = sequelize.define('transactions', {
     },
 })
 Transactions.belongsTo(Trips, { foreignKey: 'tripId', onDelete: 'CASCADE' });
+Transactions.belongsTo(Children, { foreignKey: 'childId', onDelete: 'CASCADE' });
 Transactions.belongsTo(User, { foreignKey: 'userId', onDelete: 'CASCADE' });
 
 
 
-export default Trips;
+export default Transactions;

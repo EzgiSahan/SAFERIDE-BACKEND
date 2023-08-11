@@ -74,7 +74,6 @@ function replaceEmptyAttributes(jsonObject, replacementObject) {
 router.put('/:id', async(req,res)=>{
     try {
       const id = req.params.id;
-      console.log(id);  
       const querriedCompany = await Company.findByPk(id);
       replaceEmptyAttributes(req.body,querriedCompany);
   
@@ -82,7 +81,6 @@ router.put('/:id', async(req,res)=>{
         res.status(400).json({ message: 'Company not found' });
         return;
       }
-      console.log(querriedCompany.toJSON());
       const newCompany = await querriedCompany.update({
         model: req.body.model,
         companyId: req.body.companyId,

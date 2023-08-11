@@ -20,6 +20,7 @@ router.post('/', async(req, res) => {
             type: req.body.type,
             tripId: req.body.tripId,
             userId: req.body.userId,
+            childId: req.body.childId
         });
         await newTransaction.save(); 
         res.status(200).json({transactions: newTransaction.toJSON()})
@@ -83,6 +84,8 @@ router.put('/:id', async(req,res)=>{
         type: req.body.type,
         tripId: req.body.tripId,
         userId: req.body.userId,
+        childId: req.body.childId
+
       });
       res.status(200).json({ message: 'Transaction Updated Successfully!' });
     }

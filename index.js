@@ -14,7 +14,7 @@ import tripsRouter from './routes/trips-routes.js';
 import verificationRouter from './routes/verification-routes.js'
 import companyAdminRouter from './routes/companyAdmin-routes.js'
 import sequelize from './db.js';
-  
+import transactionsRouter from './routes/transaction-routes.js';
 
 dotenv.config();
 
@@ -47,6 +47,7 @@ app.use('/api/busDriver', busDriverRouter);
 app.use('/api/children', childrenRouter);
 app.use('/api/company', companyRouter);
 app.use('/api/trips', tripsRouter);
+app.use('/api/transactions', transactionsRouter);
 app.use('/api/companyAdmin', companyAdminRouter)
 app.use('/api/verification', verificationRouter)
 
