@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { jwtTokens } from '../utils/jwt-helpers.js';
 import User from '../models/User.js';
+import CompanyAdmin from '../models/CompanyAdmin.js';
 
 const router = express.Router();
 
@@ -11,11 +12,19 @@ router.post('/login', async(req, res) => {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ where: { email: email } });
+        const companyAdmin = await CompanyAdmin.findOne({where: {email: email}});
         if (!user) {
             return res.status(401).json({ error: 'Email is incorrect' });
         }
+        if (!user) {
+            return res.status(401).json({error: 'Email is incorrect'});
+        }
         const validPassword = await bcrypt.compare(password, user.password);
+        const validCompanyAdminPassword = await bcrypt.compare(password, user.password);
         if (!validPassword) {
+            return res.status(401).json({ error: 'Incorrect password' });
+        }
+        if (!validCompanyAdminPassword) {
             return res.status(401).json({ error: 'Incorrect password' });
         }
         const tokens = jwtTokens(user);

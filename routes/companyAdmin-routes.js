@@ -1,6 +1,7 @@
 import express from 'express';
 import pool from '../db.js';
 import { authenticateToken } from '../middleware/authorization.js';
+import bcrypt from 'bcrypt';
 import CompanyAdmin from '../models/CompanyAdmin.js';
 
 
@@ -19,8 +20,8 @@ router.post('/', async(req, res) => {
     try {
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
       const newCompanyAdmin = await CompanyAdmin.create({
-        firstName: req.body.name,
-        lastName: req.body.surname,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
         email: req.body.email,
         phone: req.body.phone,
         country: req.body.country,
@@ -91,8 +92,8 @@ router.put('/:id', async(req,res)=>{
     }
     console.log(querriedCompanyAdmin.toJSON());
     const newCompanyAdmin = await querriedCompanyAdmin.update({
-      firstName: req.body.name,
-      lastName: req.body.surname,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
       email: req.body.email,
       phone: req.body.phone,
       country: req.body.country,
