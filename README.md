@@ -21,10 +21,12 @@ Before you start using the project, you need to create the database that you are
 2. Connect to PostgreSQL using a tool like `psql` or any graphical tool you prefer.
 
 3. Create the database using the command:
-   CREATE DATABASE safeRide;
+#  
+     CREATE DATABASE safeRide;
 
-4. Grant necessary privileges to the user specified in the `DB_USER` environment variable:
-   GRANT ALL PRIVILEGES ON DATABASE safeRide TO <DB_USER>;
+5. Grant necessary privileges to the user specified in the `DB_USER` environment variable:
+#
+     GRANT ALL PRIVILEGES ON DATABASE safeRide TO <DB_USER>;
 
 # Libraries
 ### Sequelize
