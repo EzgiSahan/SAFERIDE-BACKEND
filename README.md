@@ -13,6 +13,17 @@ This project uses the following environment variables, Please create a .env file
 |DB_USER_PASSWORD                           | Database postgres username                | "postgres"                                            |
 |DB_NAME                           | Name of your database               | "safeRide"                                            |
 
+# Libraries
+### Sequelize
+We use Sequelize as an ORM to interact with the database. The models defined in the `models` folder correspond to the database tables. Update these models to match your application's data structure.
+
+### Next.js
+If you're looking for a frontend framework, consider using Next.js. It provides server-side rendering and routing capabilities, enhancing the user experience. Check out the Next.js documentation for more details.
+
+### Node.js
+This project is built using Node.js, a runtime environment for executing JavaScript code server-side. Make sure you have Node.js version 8.0.0 or later installed.
+
+For further information on using these libraries, refer to their respective documentation.
 
 # Pre-requisites
 - Install [Node.js](https://nodejs.org/en/) version 8.0.0
