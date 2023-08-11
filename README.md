@@ -13,6 +13,19 @@ This project uses the following environment variables, Please create a .env file
 |DB_USER_PASSWORD                           | Database postgres username                | "postgres"                                            |
 |DB_NAME                           | Name of your database               | "safeRide"                                            |
 
+# Creating the Database
+Before you start using the project, you need to create the database that you are trying to connect to. Follow these steps:
+
+1. Make sure you have PostgreSQL installed and running on your machine or server.
+
+2. Connect to PostgreSQL using a tool like `psql` or any graphical tool you prefer.
+
+3. Create the database using the command:
+   CREATE DATABASE safeRide;
+
+4. Grant necessary privileges to the user specified in the `DB_USER` environment variable:
+   GRANT ALL PRIVILEGES ON DATABASE safeRide TO <DB_USER>;
+
 # Libraries
 ### Sequelize
 We use Sequelize as an ORM to interact with the database. The models defined in the `models` folder correspond to the database tables. Update these models to match your application's data structure.
