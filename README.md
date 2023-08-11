@@ -1,6 +1,5 @@
 # SAFERIDE-BACKEND
 
-# Nodejs FES Template
 
 # Environment vars
 This project uses the following environment variables, Please create a .env file in the root of the project with the following attributes mentioned:
@@ -8,8 +7,8 @@ This project uses the following environment variables, Please create a .env file
 | Name                          | Description                         | Default Value                                  |
 | ----------------------------- | ------------------------------------| -----------------------------------------------|
 |URL                           | Cors accepted values                | "*"                                            |
-|ACCESS_TOKEN_SECRET                           | Generate your Access token secret for your JWT Tokens               | "fdksjafjnasbnvhsaR65512341asjh123h1ji5hj12hu21y4h1j2ndksjafjnasbnvhsadfh1j2ndss"                                            |
-|REFRESH_TOKEN_SECRET                             | Generate your Refresh token secret for your JWT Tokens               | "fdksjafjnasbnvhsaR65512341asjh123h1ji5hj12hu21y4h1j2ndksjafjnasbnvhsadfh1j2ndss"                                            |
+|ACCESS_TOKEN_SECRET                           | Generate your Access token secret for your JWT Tokens               | "-"                                            |
+|REFRESH_TOKEN_SECRET                             | Generate your Refresh token secret for your JWT Tokens               | "-"                                            |
 |DB_USER                           | Database postgres username               | "postgres"                                            |
 |DB_USER_PASSWORD                           | Database postgres username                | "postgres"                                            |
 |DB_NAME                           | Name of your database               | "safeRide"                                            |
