@@ -3,11 +3,16 @@
 # Nodejs FES Template
 
 # Environment vars
-This project uses the following environment variables:
+This project uses the following environment variables, Please create a .env file in the root of the project with the following attributes mentioned:
 
 | Name                          | Description                         | Default Value                                  |
 | ----------------------------- | ------------------------------------| -----------------------------------------------|
-|CORS                           | Cors accepted values                | "*"                                            |
+|URL                           | Cors accepted values                | "*"                                            |
+|ACCESS_TOKEN_SECRET                           | Generate your Access token secret for your JWT Tokens               | "*"                                            |
+|REFRESH_TOKEN_SECRET                             | Generate your Refresh token secret for your JWT Tokens               | "*"                                            |
+|DB_USER                           | Database postgres username               | "postgres"                                            |
+|DB_USER_PASSWORD                           | Database postgres username                | "postgres"                                            |
+|DB_NAME                           | Name of your database               | "safeRide"                                            |
 
 
 # Pre-requisites
@@ -41,5 +46,5 @@ The folder structure of this app is explained below:
 | **middlewares**          | Express middlewares which process the incoming requests before handling them down to the routes
 | **routes**               | Contain all express routes, separated by module/area of application                       
 | **models**               | Models define schemas that will be used in storing and retrieving data from Application database  |
-| **index.js               | Entry point to express app                                                               |
-| package.json             | Contains npm dependencies as well as [build scripts](#what-if-a-library-isnt-on-definitelytyped)   | tsconfig.json            | Config settings for compiling source code only written in TypeScript    
+| **index.js**               | Entry point to express app                                                               |
+| package.json             | Contains npm dependencies as well as [build scripts](#what-if-a-library-isnt-on-definitelytyped)   | 
