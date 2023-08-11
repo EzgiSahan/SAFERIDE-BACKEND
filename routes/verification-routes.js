@@ -3,13 +3,18 @@ import express from 'express';
 import pool from '../db.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-
+import User from '../models/User.js';
+import CompanyAdmin from '../models/CompanyAdmin.js';
 const router = express.Router();
 
 router.post('/signup', async (req, res) => {
     try {
         const existingUser = await User.findOne({ where: { email: req.body.email } });
         if (existingUser) {
+            return res.status(409).json({ message: 'Email is already registered.' });
+        }
+        const existingUserAdmin = await CompanyAdmin.findOne({ where: { email: req.body.email } });
+        if (existingUserAdmin) {
             return res.status(409).json({ message: 'Email is already registered.' });
         }
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
