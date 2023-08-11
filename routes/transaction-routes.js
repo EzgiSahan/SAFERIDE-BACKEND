@@ -1,13 +1,14 @@
+
 import express from 'express';
 import { authenticateToken } from '../middleware/authorization.js';
-import Trips from '../models/Trips.js';
+import Transactions from '../models/Transactions.js';
 
 const router = express.Router();
 
 router.get('/', async(req, res) => {
     try {
-        const trips = await Trips.findAll();
-        res.json({trips: trips});
+        const transactions = await Transactions.findAll();
+        res.json({transactions: transactions});
     } catch (error) {
           res.status(500).json({error:error.message});
     }
@@ -15,21 +16,13 @@ router.get('/', async(req, res) => {
 
 router.post('/', async(req, res) => {
     try {
-        const seatNO = 30;
-        let seats = {};
-        for (let i = 1; i <= seatNO; i++) {
-          seats[i] = "";
-        }
-        const string_seats = JSON.stringify(seats);
-        const newTrip = await Trips.create({
-            code: req.body.code,
-            departureDate: req.body.departureDate,
-            arrivalDate: req.body.arrivalDate,
-            destination: req.body.destination,
-            seats: string_seats,            
+        const newTransaction = await Transactions.create({
+            type: req.body.type,
+            tripId: req.body.tripId,
+            userId: req.body.userId,
         });
-        await newTrip.save(); 
-        res.status(200).json({trips: newTrip.toJSON()})
+        await newTransaction.save(); 
+        res.status(200).json({transactions: newTransaction.toJSON()})
     } catch (error) {
         res.status(500).json({error: error.message});
     }
@@ -38,13 +31,13 @@ router.post('/', async(req, res) => {
 router.delete('/:id', async(req,res)=>{
     try {
         const id = req.params.id;
-        const deletedTrip = await Trips.destroy({
+        const deletedTransaction = await Transactions.destroy({
           where: {
             id: id,
           },
         });
-        if (deletedTrip === 0) {
-          res.status(400).json({ message: 'Trip not found' });
+        if (deletedTransaction === 0) {
+          res.status(400).json({ message: 'Transaction not found' });
           return;
         }
     
@@ -79,19 +72,19 @@ router.put('/:id', async(req,res)=>{
     try {
       const id = req.params.id;
       console.log(id);  
-      const querriedTrip = await Trips.findByPk(id);
-      replaceEmptyAttributes(req.body,querriedTrip);
+      const querriedTransactions = await Transactions.findByPk(id);
+      replaceEmptyAttributes(req.body,querriedTransactions);
   
-      if (!querriedTrip) {
-        res.status(400).json({ message: 'Trip not found' });
+      if (!querriedTransactions) {
+        res.status(400).json({ message: 'Transaction not found' });
         return;
       }
-      const newTrip = await querriedTrip.update({
-        model: req.body.model,
-        companyId: req.body.companyId,
-        busDriverId: req.body.busDriverId 
+      const newTransaction = await querriedTransactions.update({
+        type: req.body.type,
+        tripId: req.body.tripId,
+        userId: req.body.userId,
       });
-      res.status(200).json({ message: 'Trip Updated Successfully!' });
+      res.status(200).json({ message: 'Transaction Updated Successfully!' });
     }
     catch (err) {
       res.status(500).json({ error: err.message });
