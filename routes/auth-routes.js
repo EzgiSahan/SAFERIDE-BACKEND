@@ -11,23 +11,28 @@ const router = express.Router();
 router.post('/login', async(req, res) => {
     try {
         const { email, password } = req.body;
+        let role = "";
+        let tokens = "";
         const user = await User.findOne({ where: { email: email } });
         const companyAdmin = await CompanyAdmin.findOne({where: {email: email}});
-        if (!user) {
-            return res.status(401).json({ error: 'Email is incorrect' });
+        if (!user && !companyAdmin) {
+            return res.status(401).json({ error: 'Email not Found!' });
         }
-        if (!user) {
-            return res.status(401).json({error: 'Email is incorrect'});
+        role = user ? "User" : companyAdmin && "CompanyAdmin" ;
+        if(role =="User"){
+            const validPassword = await bcrypt.compare(password, user.password);
+            if (!validPassword) {
+                return res.status(401).json({ error: 'Incorrect password' });
+            }
+            tokens = jwtTokens(user);
         }
-        const validPassword = await bcrypt.compare(password, user.password);
-        const validCompanyAdminPassword = await bcrypt.compare(password, user.password);
-        if (!validPassword) {
-            return res.status(401).json({ error: 'Incorrect password' });
+        if(role =="CompanyAdmin"){
+            const validCompanyAdminPassword = await bcrypt.compare(password, companyAdmin.password);
+            if (!validCompanyAdminPassword) {
+                return res.status(401).json({ error: 'Incorrect password' });
+            }
+            tokens = jwtTokens(companyAdmin);
         }
-        if (!validCompanyAdminPassword) {
-            return res.status(401).json({ error: 'Incorrect password' });
-        }
-        const tokens = jwtTokens(user);
         res.cookie('refresh_token', tokens.refreshToken, { httpOnly: true });
         res.json(tokens);
     } catch (error) {
